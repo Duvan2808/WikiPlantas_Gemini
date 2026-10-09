@@ -1,0 +1,345 @@
+/* Estilos originales de wikiPlantas, separados del HTML. */
+:root {
+            /* Variables de Paleta según Familias Botánicas */
+            --wp-cannabaceae: #2e7d32;
+            --wp-solanaceae: #c62828;
+            --wp-cactaceae: #e65100;
+            --wp-orchidaceae: #6a1b9a;
+            --wp-lamiaceae: #1565c0;
+            --wp-rosaceae: #ad1457;
+            --wp-asteraceae: #f57f17;
+
+            --wp-bg: #f8faf7;
+            --wp-surface: #ffffff;
+            --wp-surface-hover: #f1f5f0;
+            --wp-text: #1b2e1e;
+            --wp-text-muted: #526355;
+            --wp-border: #d2ded0;
+            --wp-primary: #2d5a27;
+            --wp-primary-accent: #388e3c;
+            --wp-accent-light: #e8f5e9;
+            --wp-card-shadow: 0 10px 25px -5px rgba(45, 90, 39, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            --wp-header-bg: rgba(255, 255, 255, 0.92);
+        }
+
+        [data-bs-theme="dark"] {
+            --wp-bg: #0f1710;
+            --wp-surface: #18241a;
+            --wp-surface-hover: #223325;
+            --wp-text: #e2ebe3;
+            --wp-text-muted: #94a896;
+            --wp-border: #2a3d2c;
+            --wp-primary: #4caf50;
+            --wp-primary-accent: #66bb6a;
+            --wp-accent-light: #1c331e;
+            --wp-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --wp-header-bg: rgba(24, 36, 26, 0.92);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--wp-bg);
+            color: var(--wp-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Navbar Header */
+        .wp-header {
+            background-color: var(--wp-header-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--wp-border);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .wp-logo-img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+        }
+
+        .btn-theme-toggle, .btn-login, .btn-menu {
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        /* Offcanvas Navigation */
+        .offcanvas {
+            background-color: var(--wp-surface);
+            color: var(--wp-text);
+            border-right: 1px solid var(--wp-border);
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            color: var(--wp-text);
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 0.4rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link-custom:hover, .nav-link-custom.active {
+            background-color: var(--wp-accent-light);
+            color: var(--wp-primary);
+            transform: translateX(4px);
+        }
+
+        .nav-link-custom i {
+            width: 28px;
+            font-size: 1.2rem;
+            margin-right: 0.75rem;
+        }
+
+        /* Vistas de Páginas SPA */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.35s ease-in-out forwards;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Submenú de Familias (Aside Izquierdo) */
+        .family-badge-list .list-group-item {
+            background-color: var(--wp-surface);
+            color: var(--wp-text);
+            border: 2px solid transparent;
+            border-left: 5px solid transparent;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+
+        .family-badge-list .list-group-item:hover,
+        .family-badge-list .list-group-item.active {
+            background-color: var(--wp-surface-hover);
+            transform: translateX(3px);
+        }
+
+        /* Iluminación de borde al pasar el cursor por familia */
+        .family-badge-list .list-group-item[data-family="Cannabaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Cannabaceae"].active {
+            border-color: var(--wp-cannabaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Solanaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Solanaceae"].active {
+            border-color: var(--wp-solanaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Cactaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Cactaceae"].active {
+            border-color: var(--wp-cactaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Orchidaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Orchidaceae"].active {
+            border-color: var(--wp-orchidaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Lamiaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Lamiaceae"].active {
+            border-color: var(--wp-lamiaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Rosaceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Rosaceae"].active {
+            border-color: var(--wp-rosaceae);
+        }
+        .family-badge-list .list-group-item[data-family="Asteraceae"]:hover,
+        .family-badge-list .list-group-item[data-family="Asteraceae"].active {
+            border-color: var(--wp-asteraceae);
+        }
+
+        /* Tarjetas de Plantas */
+        .plant-card {
+            background-color: var(--wp-surface);
+            border: 1px solid var(--wp-border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--wp-card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .plant-card-img-wrapper {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .plant-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .plant-card:hover .plant-card-img {
+            transform: scale(1.06);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .favorite-btn:hover, .favorite-btn.active {
+            background: #ffffff;
+            color: #e53935;
+            transform: scale(1.1);
+        }
+
+        .family-tag {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .bg-Cannabaceae { background-color: var(--wp-cannabaceae); }
+        .bg-Solanaceae { background-color: var(--wp-solanaceae); }
+        .bg-Cactaceae { background-color: var(--wp-cactaceae); }
+        .bg-Orchidaceae { background-color: var(--wp-orchidaceae); }
+        .bg-Lamiaceae { background-color: var(--wp-lamiaceae); }
+        .bg-Rosaceae { background-color: var(--wp-rosaceae); }
+        .bg-Asteraceae { background-color: var(--wp-asteraceae); }
+
+        /* Estado Vacío de Herbario */
+        .empty-herbario {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--wp-border);
+            border-radius: 24px;
+            background-color: var(--wp-surface);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .empty-herbario-text {
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--wp-text-muted);
+            font-size: 1.4rem;
+        }
+
+        /* Tarjetas de la Comunidad */
+        .community-card {
+            background-color: var(--wp-surface);
+            border: 1px solid var(--wp-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .community-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--wp-primary);
+            box-shadow: var(--wp-card-shadow);
+        }
+
+        /* Escáner e IA */
+        .scanner-frame {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--wp-border);
+        }
+
+        .scanner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .laser-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00ff66, transparent);
+            box-shadow: 0 0 15px #00ff66;
+            animation: scan 2s infinite ease-in-out;
+            display: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 98%; }
+            100% { top: 0%; }
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, var(--wp-primary), var(--wp-primary-accent));
+            color: white;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--wp-border);
+            background-color: var(--wp-surface);
+            color: var(--wp-text-muted);
+        }

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wikiPlantas - Enciclopedia Botánica Interactiva</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- Header Principal -->
+    <header class="wp-header py-2 px-3 mb-4">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <!-- Logo Izquierda -->
+            <a href="#" class="d-flex align-items-center text-decoration-none nav-trigger" data-target="page-inicio">
+                <img src="https://images.unsplash.com/photo-1536939459926-301728717817?auto=format&fit=crop&w=120&q=80" alt="Cannabis WikiLogo" class="wp-logo-img rounded-circle me-2">
+                <span class="fs-4 font-serif fw-bold text-success d-none d-sm-inline">wikiPlantas</span>
+            </a>
+
+            <!-- Barra de Búsqueda Centro -->
+            <div class="d-none d-md-flex align-items-center w-50 max-w-md mx-auto">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="fas fa-search"></i></span>
+                    <input type="text" id="globalSearchInput" class="form-control border-start-0 bg-transparent" placeholder="Buscar especies, familias o usos...">
+                </div>
+            </div>
+
+            <!-- Botones de Control Derecha -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Botón Toggle Tema Claro/Oscuro -->
+                <button class="btn btn-outline-success btn-theme-toggle" id="themeToggleBtn" title="Cambiar Tema">
+                    <span id="themeIcon">☀️</span>
+                </button>
+
+                <!-- Botón Login -->
+                <button class="btn btn-outline-secondary btn-login" data-bs-toggle="modal" data-bs-target="#loginModal" title="Iniciar Sesión">
+                    <i class="fas fa-user"></i>
+                </button>
+
+                <!-- Botón Menú Hamburguesa -->
+                <button class="btn btn-success btn-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" title="Menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú Desplegable Lateral (6 Secciones Obligatorias) -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title font-serif fw-bold text-success" id="offcanvasNavbarLabel">
+                <i class="fas fa-leaf me-2"></i>Navegación
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <nav class="nav flex-column">
+                <a class="nav-link-custom active nav-trigger" data-target="page-inicio" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-home text-success"></i> 1. Inicio (WikiPlantas)
+                </a>
+                <a class="nav-link-custom nav-trigger" data-target="page-herbario" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-book-bookmark text-danger"></i> 2. Mi herbario
+                </a>
+                <a class="nav-link-custom nav-trigger" data-target="page-editorial" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-newspaper text-warning"></i> 3. Editorial
+                </a>
+                <a class="nav-link-custom nav-trigger" data-target="page-comunidad" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-comments text-info"></i> 4. Portal comunitario
+                </a>
+                <a class="nav-link-custom nav-trigger" data-target="page-azar" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-dice text-purple" style="color: #6a1b9a;"></i> 5. Especie al azar
+                </a>
+                <a class="nav-link-custom nav-trigger" data-target="page-identificador" data-bs-dismiss="offcanvas">
+                    <i class="fas fa-camera text-primary"></i> 6. Identificador
+                </a>
+            </nav>
+            <div class="mt-auto pt-4 border-top">
+                <p class="small text-muted mb-0"><i class="fas fa-circle-info me-1"></i> Base botánica sincronizada.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL VISTAS SPA -->
+    <main class="container-fluid px-3 px-md-4 py-2 flex-grow-1">
+
+        <!-- ==================== PÁGINA 1: INICIO (WIKIPLANTAS) ==================== -->
+        <section id="page-inicio" class="page-view active">
+            <div class="row g-4">
+                <!-- Aside Izquierdo: Submenú de Familias -->
+                <aside class="col-lg-3 col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 sticky-top" style="top: 80px; z-index: 10;">
+                        <h5 class="font-serif fw-bold mb-3 d-flex align-items-center justify-content-between">
+                            <span><i class="fas fa-sitemap text-success me-2"></i>Familias</span>
+                            <span class="badge bg-success rounded-pill" id="totalPlantsBadge">0</span>
+                        </h5>
+                        <p class="small text-muted mb-3">Haz clic para filtrar por familia o pasa el cursor para iluminar el borde.</p>
+                        
+                        <div class="list-group family-badge-list" id="familyFilterList">
+                            <button class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center" data-family="ALL">
+                                <span><i class="fas fa-border-all me-2"></i>Todas las familias</span>
+                                <i class="fas fa-chevron-right small text-muted"></i>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Cannabaceae">
+                                <span><i class="fas fa-cannabis me-2 text-success"></i>Cannabaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Solanaceae">
+                                <span><i class="fas fa-seedling me-2 text-danger"></i>Solanaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Cactaceae">
+                                <span><i class="fas fa-sun me-2 text-warning"></i>Cactaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Orchidaceae">
+                                <span><i class="fas fa-spa me-2 text-purple" style="color: #6a1b9a;"></i>Orchidaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Lamiaceae">
+                                <span><i class="fas fa-leaf me-2 text-primary"></i>Lamiaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Rosaceae">
+                                <span><i class="fas fa-rose me-2 text-danger"></i>Rosaceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-family="Asteraceae">
+                                <span><i class="fas fa-sun me-2 text-warning"></i>Asteraceae</span>
+                                <span class="badge rounded-pill bg-light text-dark">2</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Contenido Principal: Grid de Plantas -->
+                <main class="col-lg-9 col-md-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="font-serif fw-bold mb-1" id="currentCatalogTitle">Catálogo General de Especies</h2>
+                            <p class="text-muted small mb-0">Explora la diversidad botánica con fichas descriptivas completas.</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4" id="plantCatalogGrid">
+                        <!-- Tarjetas renderizadas dinámicamente -->
+                    </div>
+                </main>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA 2: MI HERBARIO ==================== -->
+        <section id="page-herbario" class="page-view">
+            <div class="mb-4">
+                <h2 class="font-serif fw-bold text-success mb-1"><i class="fas fa-book-bookmark me-2"></i>Mi Herbario Personal</h2>
+                <p class="text-muted">Colección de ejemplares botánicos guardados en favoritos.</p>
+            </div>
+
+            <div id="herbarioContainer" class="row g-4">
+                <!-- Se llena dinámicamente con favoritos de localStorage -->
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA 3: EDITORIAL ==================== -->
+        <section id="page-editorial" class="page-view">
+            <div class="text-center py-4 mb-4 border-bottom">
+                <span class="badge bg-success px-3 py-2 text-uppercase mb-2">Boletín Botánico</span>
+                <h1 class="display-5 font-serif fw-bold">EDITORIAL</h1>
+                <p class="lead text-muted max-w-2xl mx-auto">Avances científicos, taxonomía moderna y etnobotánica sostenible.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <article class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1200&q=80" class="card-img-top" style="height: 380px; object-fit: cover;" alt="Editorial Principal">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-3 text-muted small">
+                                <span><i class="fas fa-user-circle me-1"></i> Dra. Elena Rostova</span>
+                                <span>•</span>
+                                <span><i class="fas fa-calendar me-1"></i> Octubre 2026</span>
+                                <span>•</span>
+                                <span class="badge bg-success-subtle text-success">Investigación</span>
+                            </div>
+                            <h2 class="font-serif fw-bold mb-3">La resiliencia celular de las Cactáceas ante el cambio climático</h2>
+                            <p class="card-text fs-5 text-muted mb-4">
+                                El metabolismo ácido de las crasuláceas (CAM) representa una de las adaptaciones fisiológicas más fascinantes del reino vegetal. Descubre cómo las glucoproteínas y la síntesis de flavonoides previenen el colapso hídrico en ecosistemas áridos extremos.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                        <h4 class="font-serif fw-bold mb-3"><i class="fas fa-bookmark text-success me-2"></i>Artículos Destacados</h4>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                                <h6 class="fw-bold mb-1">Terpenos en Cannabaceae y su perfil filogenético</h6>
+                                <p class="small text-muted mb-0">Análisis bioquímico de mirceno y beta-cariofileno.</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                                <h6 class="fw-bold mb-1">Simbiosis Micorrízica en Orchidaceae</h6>
+                                <p class="small text-muted mb-0">La germinación orquídea dependiente de hongos del suelo.</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA 4: PORTAL COMUNITARIO ==================== -->
+        <section id="page-comunidad" class="page-view">
+            <!-- Vista General de Temas -->
+            <div id="communityCategoryView">
+                <div class="text-center py-3 mb-4">
+                    <h1 class="display-6 font-serif fw-bold">PORTAL COMUNITARIO</h1>
+                    <p class="text-muted">Foros de discusión, encuestas e intercambio botánico.</p>
+                </div>
+
+                <div class="row g-4" id="communityTopicsGrid">
+                    <!-- Tarjetas de temas dinámicas -->
+                </div>
+            </div>
+
+            <!-- Vista Subpágina Dedicada -->
+            <div id="communityThreadView" style="display: none;">
+                <button class="btn btn-outline-secondary mb-4" id="btnBackToCommunity">
+                    <i class="fas fa-arrow-left me-2"></i>Volver a Temas
+                </button>
+
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fs-1 me-3" id="threadIcon">💬</span>
+                        <div>
+                            <h2 class="font-serif fw-bold mb-0" id="threadTitle">Título del Foro</h2>
+                            <p class="text-muted mb-0" id="threadDesc">Descripción temática.</p>
+                        </div>
+                    </div>
+
+                    <!-- Encuesta interactiva -->
+                    <div id="pollInteractiveArea" class="p-3 bg-light rounded-3 mb-4 d-none">
+                        <h5 class="fw-bold mb-3"><i class="fas fa-poll me-2 text-primary"></i>Encuesta: ¿Cuál es el fertilizante orgánico más efectivo?</h5>
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-outline-success text-start vote-btn" data-option="Humus de Lombriz">Humus de Lombriz</button>
+                            <button class="btn btn-outline-success text-start vote-btn" data-option="Té de Plátano">Té de Plátano y Potasio</button>
+                            <button class="btn btn-outline-success text-start vote-btn" data-option="Guano de Murciélago">Guano de Murciélago</button>
+                        </div>
+                        <div id="pollResults" class="small text-muted"></div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Comentarios -->
+                    <h4 class="font-serif fw-bold mb-3"><i class="fas fa-comments me-2"></i>Comentarios</h4>
+
+                    <form id="commentForm" class="mb-4">
+                        <div class="mb-3">
+                            <input type="text" id="commentAuthor" class="form-control mb-2" placeholder="Tu nombre / alias" required>
+                            <textarea id="commentText" class="form-control" rows="3" placeholder="Escribe tu comentario..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane me-2"></i>Publicar</button>
+                    </form>
+
+                    <div class="vstack gap-3" id="commentsList">
+                        <!-- Comentarios cargados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA 5: ESPECIE AL AZAR ==================== -->
+        <section id="page-azar" class="page-view">
+            <div class="text-center py-3 mb-4">
+                <h1 class="display-6 font-serif fw-bold">ESPECIE AL AZAR</h1>
+                <p class="text-muted">Minijuego de identificación y adivinanza botánica.</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center">
+                    
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="score-box d-inline-flex align-items-center gap-3">
+                            <i class="fas fa-trophy fs-3 text-warning"></i>
+                            <div class="text-start">
+                                <div class="small text-uppercase opacity-75 fw-bold">Puntuación</div>
+                                <div class="fs-2 fw-bold" id="userScore">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="position-relative mx-auto mb-4 rounded-4 overflow-hidden shadow" style="max-width: 480px; height: 300px; background-color: #e0e0e0;">
+                        <img id="randomPlantImg" src="https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=600&q=80" alt="Planta Aleatoria" class="w-100 h-100 object-fit-cover">
+                    </div>
+
+                    <button class="btn btn-success btn-lg rounded-pill px-4 py-2 mb-4 shadow-sm" id="btnGetRandomPlant">
+                        <i class="fas fa-random me-2"></i>Generar Planta Aleatoria
+                    </button>
+
+                    <div class="row justify-content-center g-2 align-items-center mb-3">
+                        <div class="col-md-8">
+                            <input type="text" id="guessInput" class="form-control form-control-lg text-center" placeholder="Escribe el nombre o descripción...">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary btn-lg w-100" id="btnCheckGuess">
+                                <i class="fas fa-check-circle me-2"></i>Validar (+1 / -1)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="gameFeedback" class="mt-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PÁGINA 6: IDENTIFICADOR ==================== -->
+        <section id="page-identificador" class="page-view">
+            <div class="text-center py-3 mb-4">
+                <h1 class="display-6 font-serif fw-bold">IDENTIFICADOR IA</h1>
+                <p class="text-muted">Escaneo por visión computacional.</p>
+            </div>
+
+            <!-- Layout de 3 columnas -->
+            <div class="row g-4">
+                
+                <!-- Aside Izquierdo: Carga de foto -->
+                <aside class="col-lg-3 col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h5 class="font-serif fw-bold mb-3"><i class="fas fa-upload text-success me-2"></i>Cargar Imagen</h5>
+                        <p class="small text-muted mb-3">Sube una fotografía desde tu galería o archivos.</p>
+                        
+                        <div class="mb-3">
+                            <label for="plantFileInput" class="form-label d-block btn btn-outline-success py-3 rounded-3 text-center cursor-pointer">
+                                <i class="fas fa-image fs-3 d-block mb-2"></i>
+                                Seleccionar Archivo
+                            </label>
+                            <input type="file" id="plantFileInput" class="d-none" accept="image/*">
+                        </div>
+
+                        <button class="btn btn-success w-100 py-2 mt-auto" id="btnStartScan">
+                            <i class="fas fa-microscope me-2"></i>Escanear e Identificar
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Main Central: Muestra la foto escaneada -->
+                <main class="col-lg-5 col-md-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column align-items-center justify-content-center">
+                        <div class="scanner-frame mb-3" id="scanFrame">
+                            <img id="previewScanImg" src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=600&q=80" alt="Muestra Botánica" class="scanner-img">
+                            <div class="laser-line" id="laserLine"></div>
+                        </div>
+                        <span class="badge bg-dark text-light font-monospace px-3 py-2" id="scanStatus">Estado: Listo para escanear</span>
+                    </div>
+                </main>
+
+                <!-- Aside Derecho: Resultados del análisis -->
+                <aside class="col-lg-4 col-md-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h5 class="font-serif fw-bold mb-3"><i class="fas fa-brain text-primary me-2"></i>Resultados del Análisis</h5>
+                        
+                        <!-- 3 Grupos familiares -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-muted small text-uppercase mb-2">Grupos Familiares Coincidentes</h6>
+                            <div id="familyMatchResults">
+                                <p class="small text-muted fst-italic">Carga y escanea una imagen para ver los resultados.</p>
+                            </div>
+                        </div>
+
+                        <!-- 3 Nombres de plantas coincidentes -->
+                        <div>
+                            <h6 class="fw-bold text-muted small text-uppercase mb-2">Especies Candidatas</h6>
+                            <div id="plantMatchResults">
+                                <p class="small text-muted fst-italic">Sin datos de diagnóstico.</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0 small">&copy; 2026 wikiPlantas — Aplicación Botánica SPA.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-serif fw-bold text-success"><i class="fas fa-user-circle me-2"></i>Acceso de Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Correo Electrónico</label>
+                            <input type="email" class="form-control" placeholder="usuario@wikiplantas.org" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Contraseña</label>
+                            <input type="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Iniciar Sesión</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript Vanilla de la Aplicación -->
+    <script src="js/app.js"></script>
+</body>
+</html>
